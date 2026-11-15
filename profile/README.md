@@ -16,11 +16,11 @@ Releases e i suoi limiti dichiarati. Si prende solo ciò che serve.
 
 | componente | ultima versione | cosa fa | ti serve se… |
 |---|---|---|---|
-| [**la-ruota**](https://github.com/2S-2Solution/la-ruota) | [2026.11.10](https://github.com/2S-2Solution/la-ruota/releases/latest) | PyTorch 2.5.1 compilato **nativo** per ROCm, autosufficiente | vuoi PyTorch sulla Radeon VII: è la scelta consigliata |
+| [**la-ruota**](https://github.com/2S-2Solution/la-ruota) | [2.15](https://github.com/2S-2Solution/la-ruota/releases/latest) · [2.5.1](https://github.com/2S-2Solution/la-ruota/releases/tag/v2026.11.10) | PyTorch compilato **nativo** per gfx906: **2.15** sul kit ROCm 10.1 con MIOpen 3.6 corretta (richiede Marconi), oppure **2.5.1** autosufficiente | vuoi PyTorch sulla Radeon VII: è la scelta consigliata |
 | [**rocm-marconi**](https://github.com/2S-2Solution/rocm-marconi) | [2026.11.14](https://github.com/2S-2Solution/rocm-marconi/releases/latest) | kit ROCm/HIP 5.7: shim con **557 API HIP 6.x/7.x** sulla runtime 5.7 del driver, rocBLAS, hipRTC, clang 21 | vuoi scrivere o usare software HIP, compresi i programmi compilati con HIP 7 e le **wheel ufficiali AMD di PyTorch 2.15** |
-| [**miopen-gfx906**](https://github.com/2S-2Solution/miopen-gfx906) | [2026.11.11](https://github.com/2S-2Solution/miopen-gfx906/releases/latest) | MIOpen 3.5.2 corretta: tre casi di **gradienti sbagliati senza errori** eliminati, anche nel database precompilato di AMD | usi MIOpen fuori da La Ruota |
+| [**miopen-gfx906**](https://github.com/2S-2Solution/miopen-gfx906) | [2026.11.11](https://github.com/2S-2Solution/miopen-gfx906/releases/latest) | MIOpen corretta (installatore 3.5.2; patch anche per la 3.6): tre casi di **gradienti sbagliati senza errori** eliminati, anche nel database precompilato di AMD, più due correzioni alle RNN | usi MIOpen fuori da La Ruota |
 | [**zluda-gfx906**](https://github.com/2S-2Solution/zluda-gfx906) | [2026.11.14](https://github.com/2S-2Solution/zluda-gfx906/releases/latest) | ZLUDA, allineato all'originale: programmi CUDA (anche le wheel PyTorch ufficiali) tradotti per gfx906 | devi far girare software CUDA già compilato |
-| [**tabpfn-gfx906**](https://github.com/2S-2Solution/tabpfn-gfx906) | [2026.11.11](https://github.com/2S-2Solution/tabpfn-gfx906/releases/latest) | attenzione fp32 veloce per TabPFN 8.0.3 · *Built with PriorLabs-TabPFN* | usi TabPFN con La Ruota |
+| [**tabpfn-gfx906**](https://github.com/2S-2Solution/tabpfn-gfx906) | [2026.11.15](https://github.com/2S-2Solution/tabpfn-gfx906/releases/latest) | attenzione fp32 veloce per **TabPFN 10** (modello v3.5 circa 3× più veloce) e 8.0.3 · *Built with PriorLabs-TabPFN* | usi TabPFN con La Ruota |
 
 > **Da sapere.** La MIOpen inclusa nelle wheel AMD di PyTorch 2.15 sbaglia ancora in silenzio il
 > gradiente della convoluzione 3×3 a 3 canali: con quelle wheel servono
@@ -30,11 +30,12 @@ Releases e i suoi limiti dichiarati. Si prende solo ciò che serve.
 **Dipendenze** (si dichiarano, non si copiano):
 
 ```
-La Ruota ............ autosufficiente (driver AMD + Python 3.12)
-  └─ tabpfn-gfx906 .. richiede La Ruota
+La Ruota 2.5.1 ...... autosufficiente (driver AMD + Python 3.12)
 Marconi ............. base (driver AMD)
+  ├─ La Ruota 2.15 .. richiede Marconi ≥ 2026.11.14 (MIOpen 3.6 inclusa)
   └─ MIOpen ......... richiede Marconi
        └─ ZLUDA ..... richiede Marconi e MIOpen
+tabpfn-gfx906 ....... richiede La Ruota (2.15 con TabPFN 10, 2.5.1 con TabPFN 8.0.3)
 ```
 
 Ordine d'installazione per ZLUDA: **Marconi → MIOpen → ZLUDA**.
@@ -55,13 +56,13 @@ Ringraziamenti: [ZLUDA](https://github.com/vosen/ZLUDA) (Andrzej Janik e contrib
 **[www.2solution.it](https://www.2solution.it)**.
 
 Open-source, separately installable components that bring local AI back to the **AMD Radeon VII
-(gfx906) on Windows**: [la-ruota](https://github.com/2S-2Solution/la-ruota) (native ROCm PyTorch 2.5.1,
-self-contained, recommended), [rocm-marconi](https://github.com/2S-2Solution/rocm-marconi) (HIP 5.7
+(gfx906) on Windows**: [la-ruota](https://github.com/2S-2Solution/la-ruota) (native ROCm PyTorch,
+recommended: 2.15 on AMD's ROCm 10.1 kit with fixed MIOpen 3.6, needs Marconi; or self-contained 2.5.1), [rocm-marconi](https://github.com/2S-2Solution/rocm-marconi) (HIP 5.7
 extension kit: 557 HIP 6.x/7.x APIs on the driver's 5.7 runtime, runs HIP 7 programs and AMD's
 official PyTorch 2.15 wheels), [miopen-gfx906](https://github.com/2S-2Solution/miopen-gfx906) (MIOpen
 with three silent wrong-gradient bugs fixed, including in AMD's precompiled kernel database),
 [zluda-gfx906](https://github.com/2S-2Solution/zluda-gfx906) (ZLUDA for gfx906, aligned with upstream)
-and [tabpfn-gfx906](https://github.com/2S-2Solution/tabpfn-gfx906) (fp32 attention for TabPFN).
+and [tabpfn-gfx906](https://github.com/2S-2Solution/tabpfn-gfx906) (fp32 attention for TabPFN 10 and 8.0.3).
 Install order for ZLUDA: Marconi → MIOpen → ZLUDA. Note: the MIOpen inside AMD's PyTorch 2.15 wheels
 still miscomputes the 3-channel 3×3 weight gradient — set the two `MIOPEN_DEBUG_*=0` variables or use
 miopen-gfx906. Tested on a single Radeon VII.
