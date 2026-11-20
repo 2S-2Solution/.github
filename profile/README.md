@@ -25,7 +25,7 @@ Releases e i suoi limiti dichiarati. Si prende solo ciò che serve.
 > **Da sapere.** La MIOpen inclusa nelle wheel AMD di PyTorch 2.15 sbaglia ancora in silenzio il
 > gradiente della convoluzione 3×3 a 3 canali: con quelle wheel servono
 > `MIOPEN_DEBUG_CONV_DIRECT_ASM_WRW3X3=0` e `MIOPEN_DEBUG_CONV_IMPLICIT_GEMM_ASM_WRW_V4R1=0`, oppure la
-> MIOpen di miopen-gfx906. Sul driver Windows più stream non danno velocità (i kernel non si sovrappongono), ma l'ordine fra stream non è garantito: le dipendenze vanno sempre dichiarate con gli eventi.
+> MIOpen di miopen-gfx906. Sul driver Windows più stream non danno velocità misurabile, ma il driver può sovrapporre lavoro di stream diversi e l'ordine fra stream non è garantito: le dipendenze vanno sempre dichiarate con gli eventi.
 
 **Dipendenze** (si dichiarano, non si copiano):
 
@@ -91,8 +91,8 @@ Install order for ZLUDA: **Marconi → MIOpen → ZLUDA**.
 > weight gradient of 3×3 convolutions with 3 input channels (the first layer of every RGB network):
 > with those wheels set `MIOPEN_DEBUG_CONV_DIRECT_ASM_WRW3X3=0` and
 > `MIOPEN_DEBUG_CONV_IMPLICIT_GEMM_ASM_WRW_V4R1=0`, or use miopen-gfx906. On the Windows driver,
-> multiple GPU streams give no speed-up (kernels never overlapped in our tests), yet ordering across streams is not
-> guaranteed: declare cross-stream dependencies with events.
+> multiple GPU streams give no measurable speed-up, yet the driver can overlap work from different streams
+> and ordering across streams is not guaranteed: declare cross-stream dependencies with events.
 
 **What we found along the way** — each with a reproduction script and a fix in the repositories:
 - MIOpen: wrong weight gradients with no error in three solvers (one a regression from commit
